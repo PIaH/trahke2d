@@ -3,14 +3,14 @@
 /*canvas  { display:block; } */ /* To remove the scrollbars */
 
 html, body {
-    background:orange;
+    background:green;
 }
 
 #container {
-  position: relative;
+    position: relative;
 }
 #container canvas {
-  position: absolute;
+    position: absolute;
 }
 
 div#overlay {
@@ -24,6 +24,7 @@ div#overlay {
     font-weight: bold;
     text-align: center;
     vertical-align: middle;
+    z-index: 9999999;
 }
 div#overlay a {
     text-decoration: none;
@@ -31,7 +32,25 @@ div#overlay a {
 
 
 canvas {
-  border:1px solid orange;
-  display:block;
-  margin:-2000px;
+    border:1px solid green;
+    display:block;
+    margin:-2000px;
+}
+
+div#jungle {
+    width:100%; 
+    height: 100%; 
+    background-image: url('../img/background.jpeg'); 
+    display: block; 
+    position: fixed; 
+    z-index: 29; 
+}
+
+div.modal-content {
+    background-color: lightgreen;
+}
+
+.form-control {
+    background-color: green;
+    color:white;
 }

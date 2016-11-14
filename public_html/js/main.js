@@ -1,7 +1,7 @@
 // ========================================================
 // Definitions
 // ========================================================
-var mainCanvas, ctx, step, steps = 0, tick = 0, period = 2, snake1, snake2, snake3, numberOfSnakes;
+var mainCanvas, ctx, step, steps = 0, tick = 0, period = 2, snake1, snake2, snake3, numberOfSnakes, backgroundSound, isRunning;
 
 // ========================================================
 // Initialization
@@ -24,28 +24,46 @@ function drawBackground(ctx) {
 // Main Loop
 // ========================================================
 
+function gameOver() {
+    
+    backgroundSound.pause();
+    backgroundSound.currentTime = 0;
+    
+    bootbox.alert({
+        message: "<h1>Game over</h1><p>Do you want to play again?</p>",
+        callback: function (result) {
+            location.reload();
+        }
+    });
+}
 
 
 function drawMain(ctx) {
+    var isGameOver = true;
 
     drawBackground(ctx);
     if(numberOfSnakes >= 1) {
         snake1.draw(ctx);
         snake1.executeGameStep(ctx);
+        if(snake1.speed > 0) isGameOver = false;
     }
     if(numberOfSnakes >= 2) {
         snake2.draw(ctx);
         snake2.executeGameStep(ctx);
+        if(snake2.speed > 0) isGameOver = false;
     }
     
     if(numberOfSnakes >= 3) {
         snake3.draw(ctx);
         snake3.executeGameStep(ctx);
+        if(snake3.speed > 0) isGameOver = false;
     }
+    if(isGameOver)
+        isRunning = false;
 
     ctx.font = "20px Arial";
     ctx.fillStyle = "#fff";
-    ctx.fillText("Play tron2d @ ittner.it", mainCanvas.width -250, mainCanvas.height - 40);
+    ctx.fillText("Playing @ittner.it", mainCanvas.width -250, mainCanvas.height - 40);
     
     if(numberOfSnakes >= 1) {
         ctx.fillStyle = snake1.color;
@@ -65,8 +83,11 @@ function drawMain(ctx) {
 function mainLoop(ctx) {
     tick++;
     drawMain(ctx);
-
-    setTimeout('mainLoop(ctx)', period);
+    if(isRunning) {
+        setTimeout('mainLoop(ctx)', period);
+    } else {
+        gameOver();
+    }
 }
 
 function handleKey(key) {
@@ -79,8 +100,20 @@ function handleKey(key) {
 // Main
 // ========================================================
 function main(num) {
+    isRunning = true;
     
+    $("#jungle").fadeOut({
+        "duration":1500
+    });
     new Audio("audio/start.wav").play();
+    backgroundSound = new Audio("audio/background.wav");
+    backgroundSound.addEventListener('ended', function() {
+        this.currentTime = 0;
+        if(isRunning) {
+            this.play();
+        }
+    }, false);
+    backgroundSound.play();
     
     numberOfSnakes = num;
     
@@ -121,8 +154,8 @@ function main(num) {
 }
 
 bootbox.prompt({
-    title: "<h1>Play a litte round of Thrake2d </h1>\n\
-            <i>by ittner.it</i><br />\n\
+    title: "<h1>Welcome to the jungle </h1>\n\
+            <i>@ ittner.it</i><br />\n\
             <img class=\"img img-responsive\" src=\"img/screen.png\"/> <br /><br />\n\
             <p>Select the number of players (1-3)</p>",
     inputType: 'select',
